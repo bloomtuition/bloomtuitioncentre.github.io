@@ -1,320 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bloom Tuition</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      /* Palette inspired by your flyer */
-      --sky: #CFEFFF;     /* light sky blue */
-      --grass: #BEE6B5;   /* gentle green */
-      --leaf: #9ED793;    /* deeper green */
-      --petal: #FFB7CE;   /* soft pink */
-      --sun: #FFE7A6;     /* butter yellow */
-      --ink: #171717;     /* near-black text */
-      --cream: #FFF9ED;   /* paper tint */
-      --cloud: #F7FBFF;   /* cards */
-      --accent: #5e60ff;  /* calls to action */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloom Tuition | Expert Online Tutoring</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif'],
+                        heading: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        bloom: {
+                            bg: '#E0F7FA',
+                            primary: '#6366F1',
+                            secondary: '#FCD34D',
+                            text: '#1F2937',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-    *{box-sizing:border-box}
-    html,body{margin:0}
-    body{
-      color:var(--ink);
-      background:linear-gradient(180deg,var(--sky) 0%, var(--cloud) 100%);
-      font-family: "Quicksand", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      line-height:1.6;
-    }
+    <style>
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.8;
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+        }
 
-    /* playful headings */
-    .hand{font-family:"Fredoka",ui-rounded,system-ui,Arial; letter-spacing:0.5px}
+        /* Adjusted blob sizes/positions to fill empty space better */
+        .blob-green { background-color: #A7F3D0; width: 500px; height: 500px; top: -150px; left: -150px; }
+        .blob-pink { background-color: #FBCFE8; width: 600px; height: 600px; top: -200px; right: -200px; animation-delay: 2s; }
+        .blob-yellow { background-color: #FDE68A; width: 400px; height: 400px; bottom: 0%; right: 10%; animation-delay: 4s; }
 
-    /* Top contact bar */
-    .topbar{
-      background: var(--sun);
-      color: #1b1b1b;
-      padding: .5rem 1rem;
-      display:flex; gap:1rem; align-items:center; justify-content:space-between;
-      font-weight:600;
-    }
-    .topbar a{color:inherit; text-decoration:none}
-    .topbar .contact{display:flex; gap:1rem; flex-wrap:wrap; align-items:center}
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(10px, 20px); }
+            100% { transform: translate(0, 0); }
+        }
 
-    /* Header & Nav */
-    header{
-      position: sticky; top:0; z-index:30;
-      background: rgba(255,255,255,.75);
-      backdrop-filter: blur(8px);
-      border-bottom:1px solid rgba(0,0,0,.05);
-    }
-    .wrap{max-width:1100px; margin:0 auto; padding:0 1rem}
-    .nav{
-      display:flex; align-items:center; justify-content:space-between; padding:.75rem 0;
-    }
-    .brand{display:flex; align-items:center; gap:.75rem}
-    .logo{
-      width:40px; height:40px; border-radius:12px; background:radial-gradient(circle at 30% 30%, var(--petal), var(--grass));
-      box-shadow: 0 4px 10px rgba(0,0,0,.08) inset, 0 2px 4px rgba(0,0,0,.06);
-    }
-    .brand h1{font-size:1.25rem; margin:0}
-
-    nav ul{list-style:none; margin:0; padding:0; display:flex; gap:.75rem}
-    nav a{display:inline-block; padding:.5rem .85rem; border-radius:999px; text-decoration:none; color:#0f172a; font-weight:700}
-    nav a:hover{background:var(--sun)}
-
-    /* Mobile nav */
-    #menuBtn{display:none}
-    @media (max-width: 760px){
-      nav ul{display:none}
-      #menuBtn{display:inline-flex; border:none; background:var(--petal); padding:.5rem .75rem; border-radius:10px; font-weight:800}
-      .mobile{display:none; position:absolute; left:0; right:0; top:100%; background:rgba(255,255,255,.98); border-bottom:1px solid rgba(0,0,0,.06)}
-      .mobile a{display:block; padding:1rem}
-      .mobile a + a{border-top:1px dashed rgba(0,0,0,.08)}
-      .mobile.show{display:block}
-    }
-
-    /* Hero banner */
-    .hero{
-      position:relative; overflow:hidden; padding: clamp(3rem, 6vw, 6rem) 0 3rem; isolation:isolate;
-    }
-    .hero .wrap{position:relative}
-    .blob{
-      position:absolute; border-radius:50%; filter:blur(12px); opacity:.9; z-index:-1
-    }
-    .b1{background:var(--grass); width:380px; height:240px; left:-60px; top:-30px; transform:rotate(-8deg)}
-    .b2{background:var(--petal); width:260px; height:260px; right:-40px; top:10px; transform:rotate(8deg)}
-    .b3{background:var(--sun); width:340px; height:220px; right:15%; bottom:-80px; transform:rotate(-12deg)}
-
-    .hero h2{font-size: clamp(2rem, 5.5vw, 4rem); margin:.25rem 0; line-height:1.1}
-    .tag{font-size:1.15rem; background: var(--cream); display:inline-block; padding:.5rem .9rem; border-radius:18px; border:2px solid rgba(0,0,0,.08)}
-    .kicker{color:#0b1324; font-weight:700; text-transform:uppercase; letter-spacing:1px; font-size: 30px;}
-
-    .cta{display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1.25rem}
-    .btn{border:none; cursor:pointer; font-weight:500; border-radius:14px; padding:.9rem 1.1rem; text-decoration:none; display:inline-flex; align-items:center; justify-content:center}
-    .btn-primary{background:var(--accent); color:white; box-shadow:0 10px 18px rgba(94,96,255,.22)}
-    .btn-soft{background:var(--sun)}
-
-    .badge{
-      position:absolute; right:1rem; top:1rem; background:var(--sun); padding:.65rem .8rem; border-radius:18px; font-weight:900; border:2px solid rgba(0,0,0,.08);
-    }
-
-    /* Features */
-    section{padding: clamp(2rem, 5vw, 4rem) 0}
-    .section-title{font-size: clamp(1.4rem, 3vw, 2.2rem); margin:0 0 1rem;}
-
-    .features{display:grid; grid-template-columns:repeat(4,1fr); gap:1rem}
-    .card{
-      background: white; border-radius:20px; padding:1.2rem; box-shadow:0 8px 24px rgba(0,0,0,.06);
-      border:1px solid rgba(0,0,0,.05);
-    }
-    .card h3{margin:.2rem 0 .35rem; font-size:1.1rem}
-    .card p{margin:0}
-    .dot{width:12px; height:12px; border-radius:999px; background:var(--leaf); display:inline-block; margin-right:.4rem}
-
-    @media (max-width: 1000px){
-      .features{grid-template-columns:repeat(2,1fr)}
-    }
-    @media (max-width: 560px){
-      .features{grid-template-columns:1fr}
-    }
-
-    /* About */
-    .about{
-      background: linear-gradient(180deg, var(--cloud), #ffffff);
-      border-top:1px solid rgba(0,0,0,.05);
-      border-bottom:1px solid rgba(0,0,0,.05);
-    }
-    .about-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:2rem; align-items:center}
-    @media (max-width: 900px){.about-grid{grid-template-columns:1fr}}
-    .blob-card{background: var(--cream); padding:1.25rem; border-radius:24px; border:1px dashed rgba(0,0,0,.1)}
-
-    /* Contact */
-    .contact{display:grid; grid-template-columns: 1.1fr .9fr; gap:1.5rem}
-    @media (max-width: 900px){.contact{grid-template-columns:1fr}}
-    form{background:white; padding:1.25rem; border-radius:20px; box-shadow:0 8px 24px rgba(0,0,0,.06); border:1px solid rgba(0,0,0,.05)}
-    label{font-weight:700; display:block; margin:.25rem 0}
-    input, textarea{width:100%; padding:.85rem 1rem; border-radius:12px; border:1px solid rgba(0,0,0,.15); font:inherit}
-    textarea{min-height:130px}
-
-    .contact-card{background:var(--sun); border:2px solid rgba(0,0,0,.08); padding:1rem; border-radius:18px}
-    .contact-card p{margin:.25rem 0}
-
-    /* Footer */
-    footer{padding:2rem 0; background:#FFE7A6; color:#5e60ff}
-    footer a{color:#5e60ff}
-
-    /* small helper */
-    .sr-only{position:absolute; left:-9999px}
-  </style>
+        html { scroll-behavior: smooth; }
+        .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); }
+    </style>
 </head>
-<body>
-  <!-- Topbar with contact details -->
-  <div class="topbar">
-    <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:1rem">
-      <div>🌸 <strong>Exclusive Early‑Bird Free Trial</strong></div>
-      <div class="contact">
-        <a href="tel:+442080582232">📞 0208 058 2232</a>
-        <span>•</span>
-        <a href="mailto:bloomtuition@outlook.com?subject=Enquiry%20from%20Bloom%20Tuition%20website">
-            ✉️ bloomtuition@outlook.com
-            </a>
-      </div>
+<body class="bg-bloom-bg text-gray-800 font-sans antialiased overflow-x-hidden relative flex flex-col min-h-screen">
+
+    <!-- Background Blobs -->
+    <div class="blob blob-green"></div>
+    <div class="blob blob-pink"></div>
+
+    <!-- Top Notification Bar -->
+    <div class="bg-yellow-300 text-yellow-900 text-xs md:text-sm font-bold py-2 text-center px-4 shadow-sm z-50">
+        <span><i class="fas fa-star mr-1"></i> Enroll now for Term 2!</span>
+        <span class="mx-2 hidden md:inline">•</span>
+        <a href="tel:02080582232" class="hover:underline"><i class="fas fa-phone-alt mr-1"></i> 0208 058 2232</a>
     </div>
-  </div>
 
-  <!-- Sticky header + nav -->
-  <header>
-    <div class="wrap nav">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <h1 class="hand" style="margin:0">Bloom Tuition</h1>
-      </div>
-      <nav aria-label="Primary">
-        <button id="menuBtn" aria-expanded="false" aria-controls="mobileNav">Menu ▾</button>
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#contact">Contact Us</a></li>
-        </ul>
-    </div>
-  </header>
+    <!-- Navigation -->
+    <nav class="glass-nav sticky top-0 z-40 shadow-sm transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-pink-400 to-yellow-400 rounded-lg shadow-sm"></div>
+                    <span class="font-heading font-extrabold text-2xl tracking-tight text-gray-900">Bloom Tuition</span>
+                </div>
 
-  <!-- Hero -->
-  <section id="home" class="hero">
-    <span class="blob b1" aria-hidden="true"></span>
-    <span class="blob b2" aria-hidden="true"></span>
-    <span class="blob b3" aria-hidden="true"></span>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 lg:space-x-8 items-center">
+                    <a href="#" class="font-bold text-gray-600 hover:text-indigo-600 transition">Home</a>
+                    <a href="#resources" class="font-bold text-gray-600 hover:text-indigo-600 transition">Resources</a>
+                    <a href="#subjects" class="font-bold text-gray-600 hover:text-indigo-600 transition">Subjects</a>
+                    <a href="#cram-club" class="font-bold text-indigo-600 hover:text-indigo-800 transition">Cram Club</a>
+                    <a href="#contact" class="px-6 py-2.5 rounded-full bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition shadow-md transform hover:-translate-y-0.5">Contact Us</a>
+                </div>
 
-    <div class="wrap">
-      <p class="kicker hand">Private Tutoring - opening soon in chigwell</p>
-      <p class="kicker hand">Join our waiting list - launching early 2026</p>
-      <h2 class="hand">Where progress matters — and wellbeing does too.</h2>
-      <p class="tag">Primary, KS3 & GCSE • Max 3 students per tutor • Weekly progress checks</p>
-      <div class="cta">
-       <a class="btn btn-primary" href="https://forms.gle/MmEZr4PwuBJsPxUv9" target="_blank">Book a Free Trial</a>
-        <a class="btn btn-soft" href="#about">Learn more</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section aria-labelledby="features-title">
-    <div class="wrap">
-      <h2 id="features-title" class="section-title hand">What we provide</h2>
-      <div class="features">
-        <article class="card">
-          <span class="dot"></span>
-          <h3 class="hand">Weekly progress tests</h3>
-          <p>Short, low‑stress checks to make sure learning sticks and gaps close quickly.</p>
-        </article>
-        <article class="card">
-          <span class="dot" style="background:var(--petal)"></span>
-          <h3 class="hand">Additional homework</h3>
-          <p>Targeted practice aligned to the session goals with clear model answers.</p>
-        </article>
-        <article class="card">
-          <span class="dot" style="background:var(--sun)"></span>
-          <h3 class="hand">3 students max per tutor</h3>
-          <p>Plenty of 1‑to‑1 attention in a gentle small‑group setting.</p>
-        </article>
-        <article class="card">
-          <span class="dot" style="background:var(--leaf)"></span>
-          <h3 class="hand">Safe & calm space</h3>
-          <p>We balance high expectations with kindness so students feel confident.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section id="about" class="about" aria-labelledby="about-title">
-    <div class="wrap about-grid">
-      <div>
-        <h2 id="about-title" class="section-title hand">About Bloom Tuition</h2>
-        <p>Bloom Tuition is a friendly centre led by experienced teachers. We specialise in small‑group tuition for Primary, KS3 and GCSE Science, Maths & English - combining rigorous progress tracking with a warm atmosphere so students can thrive.</p>
-        <div class="blob-card">
-          <ul>
-            <li><strong>Curriculum‑aligned</strong> lessons with clear objectives.</li>
-            <li><strong>Parent updates</strong> every half‑term with scores and next steps.</li>
-            <li><strong>Wellbeing‑first</strong> approach: we celebrate effort, not perfection.</li>
-          </ul>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMenu()" class="text-gray-600 hover:text-indigo-600 focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-      <aside aria-label="Early bird offer" class="contact-card">
-        <h3 class="hand" style="margin-top:0">Early‑bird Free Trial</h3>
-        <p>New families can enjoy a complimentary taster session. Limited slots each term.</p>
-        <p><strong>Call:</strong> <a href="tel:02080582232">0208 058 2232</a><br>
-           <strong>Email:</strong> <a href="mailto:bloomtuition@outlook.com">bloomtuition@outlook.com</a></p>
-        <a class="btn btn-primary" href="#contact">Claim my spot</a>
-      </aside>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 p-4 absolute w-full shadow-lg">
+            <div class="flex flex-col space-y-4 text-center">
+                <a href="#" class="font-bold text-gray-700 py-2">Home</a>
+                <a href="#resources" class="font-bold text-gray-700 py-2">Resources</a>
+                <a href="#subjects" class="font-bold text-gray-700 py-2">Subjects</a>
+                <a href="#cram-club" class="font-bold text-indigo-600 py-2">Cram Club</a>
+                <a href="#contact" class="font-bold text-indigo-600 py-2 bg-indigo-50 rounded-lg">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <!-- Constrained to max-w-5xl so text doesn't stretch too wide -->
+    <main class="relative pt-16 pb-20 md:pt-28 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center z-10">
+        <!-- Badge -->
+        <div class="inline-block mb-8 animate-fade-in-up">
+            <span class="bg-indigo-100 text-indigo-700 text-sm md:text-base font-extrabold px-6 py-2 rounded-full uppercase tracking-wide border border-indigo-200 shadow-sm hover:shadow-md transition cursor-default">
+                Online Tutoring • Available Nationwide
+            </span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="text-5xl md:text-7xl font-heading font-extrabold text-gray-900 leading-[1.1] mb-8 tracking-tight">
+            Where progress matters – <br class="hidden md:block" />
+            and <span class="text-indigo-600 relative inline-block">
+                wellbeing
+                <svg class="absolute w-full h-3 -bottom-1 left-0 text-yellow-300 -z-10 opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="8" fill="none" /></svg>
+            </span> does too.
+        </h1>
+
+        <!-- Subline Pill -->
+        <div class="inline-flex flex-wrap justify-center items-center gap-3 bg-white/60 border border-orange-200 rounded-2xl px-8 py-3 mb-10 text-gray-800 text-base font-bold shadow-sm backdrop-blur-sm mx-auto max-w-3xl">
+            <span>Primary, KS3 & GCSE</span>
+            <span class="w-1.5 h-1.5 bg-orange-400 rounded-full"></span>
+            <span>1-to-1 or Small Groups</span>
+            <span class="w-1.5 h-1.5 bg-orange-400 rounded-full"></span>
+            <span>Weekly Progress Checks</span>
+        </div>
+
+        <!-- Call to Actions -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <button onclick="openModal()" class="w-full sm:w-auto px-10 py-4 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-1 text-lg">
+                Book a Free Trial
+            </button>
+            <a href="#how-it-works" class="w-full sm:w-auto px-10 py-4 bg-yellow-400 text-yellow-900 font-bold rounded-xl shadow-md hover:bg-yellow-500 transition transform hover:-translate-y-1 text-lg">
+                How it works
+            </a>
+        </div>
+        
+        <div class="blob blob-yellow absolute z-0" style="opacity: 0.6;"></div>
+    </main>
+
+    <!-- Free Resources Section -->
+    <!-- Constrained to max-w-5xl for better card density -->
+    <section id="resources" class="py-16 bg-white border-b border-gray-100">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center md:text-left mb-8 flex flex-col md:flex-row md:items-end justify-between">
+                <div>
+                    <h2 class="text-3xl font-heading font-extrabold text-gray-900">Free Revision Resources</h2>
+                    <p class="text-gray-500 mt-2 text-lg">Downloadable packs to help you get started today.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- SATs Survival Guide -->
+                <div class="bg-indigo-600 rounded-3xl p-8 relative overflow-hidden flex flex-col justify-between h-full shadow-xl transform hover:-translate-y-1 transition duration-300 min-h-[300px]">
+                    <div class="absolute top-0 right-0 -mt-6 -mr-6 w-40 h-40 bg-indigo-500 rounded-full opacity-50"></div>
+                    <div class="relative z-10 mb-6">
+                        <div class="inline-block bg-indigo-500/30 text-indigo-50 text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">Year 6</div>
+                        <h3 class="text-3xl font-heading font-bold text-white mb-3">SATs Survival Guide</h3>
+                        <p class="text-indigo-100 text-base leading-relaxed">Essential checklists for KS2 Maths & English. Help your child feel prepared and confident for exam week.</p>
+                    </div>
+                    <div class="relative z-10 mt-auto">
+                        <button onclick="alert('Download SATs PDF!')" class="w-full bg-white text-indigo-700 font-bold py-4 px-6 rounded-xl shadow-md hover:bg-gray-50 transition flex items-center justify-center">
+                            <i class="fas fa-download mr-2"></i> Download SATs Pack
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GCSE Survival Guide -->
+                <div class="bg-purple-700 rounded-3xl p-8 relative overflow-hidden flex flex-col justify-between h-full shadow-xl transform hover:-translate-y-1 transition duration-300 min-h-[300px]">
+                    <div class="absolute top-0 right-0 -mt-6 -mr-6 w-40 h-40 bg-purple-600 rounded-full opacity-50"></div>
+                    <div class="relative z-10 mb-6">
+                        <div class="inline-block bg-purple-600/30 text-purple-50 text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">Year 10-11</div>
+                        <h3 class="text-3xl font-heading font-bold text-white mb-3">GCSE Survival Guide</h3>
+                        <p class="text-purple-100 text-base leading-relaxed">Topic lists, formula sheets, and exam technique tips to help manage revision stress and boost grades.</p>
+                    </div>
+                    <div class="relative z-10 mt-auto">
+                        <button onclick="alert('Download GCSE PDF!')" class="w-full bg-white text-purple-700 font-bold py-4 px-6 rounded-xl shadow-md hover:bg-gray-50 transition flex items-center justify-center">
+                            <i class="fas fa-download mr-2"></i> Download GCSE Pack
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <!-- Max-w-6xl allows 4 columns to fit comfortably without stretching -->
+    <section id="features" class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto pb-24 mt-16">
+        <h2 class="text-3xl font-heading font-extrabold text-gray-900 mb-10 text-center">What we provide</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1 -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition duration-300 flex flex-col">
+                <div class="h-40 w-full overflow-hidden rounded-xl mb-4 bg-green-100">
+                    <img id="imageplaceholdertest" src="https://placehold.co/600x400/A7F3D0/065F46?text=Tests" alt="Tests" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <h3 class="font-heading font-bold text-lg mb-2 text-gray-900">Weekly progress tests</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Short, low-stress online checks to make sure learning sticks.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition duration-300 flex flex-col">
+                <div class="h-40 w-full overflow-hidden rounded-xl mb-4 bg-pink-100">
+                    <img id="imageplaceholderresources" src="https://placehold.co/600x400/FBCFE8/831843?text=Resources" alt="Resources" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <h3 class="font-heading font-bold text-lg mb-2 text-gray-900">Tailored Resources</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Targeted digital practice aligned to session goals.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition duration-300 flex flex-col">
+                <div class="h-40 w-full overflow-hidden rounded-xl mb-4 bg-yellow-100">
+                    <img id="imageplaceholdergroups" src="https://placehold.co/600x400/FDE68A/92400E?text=Groups" alt="Groups" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <h3 class="font-heading font-bold text-lg mb-2 text-gray-900">Small Online Groups</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Max 3 students or 1-to-1. Plenty of attention.</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition duration-300 flex flex-col">
+                <div class="h-40 w-full overflow-hidden rounded-xl mb-4 bg-indigo-100">
+                    <img id="imageplaceholderhome" src="https://placehold.co/600x400/818CF8/312E81?text=Comfort" alt="Home" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <h3 class="font-heading font-bold text-lg mb-2 text-gray-900">Comfort of Home</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">We balance high expectations with kindness.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subjects Section -->
+    <section id="subjects" class="py-20 bg-white/50 backdrop-blur-sm border-t border-gray-100">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-heading font-extrabold text-gray-900 mb-12">Expert Tuition For All Levels</h2>
+            
+            <div class="flex flex-wrap justify-center gap-6">
+                <!-- Primary -->
+                <div class="bg-indigo-50 px-8 py-8 rounded-3xl border-2 border-indigo-100 w-full sm:w-72 hover:shadow-xl transition duration-300 group">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:scale-110 transition">
+                        <i class="fas fa-shapes text-3xl text-indigo-500"></i>
+                    </div>
+                    <h3 class="font-bold text-2xl mb-3 text-gray-900">Primary (KS2)</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">Maths & English foundation building for SATs.</p>
+                </div>
+                
+                <!-- KS3 -->
+                <div class="bg-purple-50 px-8 py-8 rounded-3xl border-2 border-purple-100 w-full sm:w-72 hover:shadow-xl transition duration-300 group">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:scale-110 transition">
+                        <i class="fas fa-book-open text-3xl text-purple-500"></i>
+                    </div>
+                    <h3 class="font-bold text-2xl mb-3 text-gray-900">KS3 (Y7-Y9)</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">Bridging the gap and preparing for GCSEs.</p>
+                </div>
+                
+                <!-- GCSE -->
+                <div class="bg-pink-50 px-8 py-8 rounded-3xl border-2 border-pink-100 w-full sm:w-72 hover:shadow-xl transition duration-300 group">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:scale-110 transition">
+                        <i class="fas fa-graduation-cap text-3xl text-pink-500"></i>
+                    </div>
+                    <h3 class="font-bold text-2xl mb-3 text-gray-900">GCSE (Y10-Y11)</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">Exam technique, core subjects & confidence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: The Saturday Cram Club -->
+    <section id="cram-club" class="py-20 bg-yellow-50 relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#F59E0B 1px, transparent 1px); background-size: 24px 24px;"></div>
+        
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <div class="inline-block bg-yellow-300 text-yellow-900 text-sm font-bold px-4 py-1.5 rounded-full mb-5 uppercase tracking-wide shadow-sm">
+                    New! Drop-in Sessions
+                </div>
+                <h2 class="text-4xl font-heading font-extrabold text-gray-900 mb-4">The Saturday Cram Club</h2>
+                <p class="text-gray-600 text-xl max-w-2xl mx-auto">
+                    Specific, high-impact masterclasses on the trickiest topics. No weekly commitment—just sign up for the ones you need.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Event Card 1 -->
+                <div class="bg-white rounded-2xl shadow-lg border-b-4 border-yellow-400 overflow-hidden hover:shadow-2xl transition-all duration-300 group flex flex-col h-full">
+                    <div class="bg-yellow-400 px-6 py-4 flex justify-between items-center">
+                        <span class="font-bold text-yellow-900"><i class="far fa-calendar-alt mr-2"></i> This Saturday</span>
+                        <span class="bg-white/40 px-3 py-1 rounded text-xs font-bold text-yellow-900 uppercase">Year 6</span>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <h3 class="font-heading font-bold text-2xl text-gray-800 mb-3 group-hover:text-indigo-600 transition">Fractions Masterclass</h3>
+                        <p class="text-gray-500 text-base mb-6">Adding, subtracting, and simplifying without the headache.</p>
+                        <div class="flex items-center justify-between mt-auto pt-6 border-t border-gray-100">
+                            <span class="text-2xl font-bold text-indigo-600">£5 <span class="text-sm text-gray-400 font-normal">/ session</span></span>
+                            <button onclick="openModal()" class="text-gray-900 font-bold text-sm hover:underline hover:text-indigo-600 transition">Book Spot &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="bg-white rounded-2xl shadow-lg border-b-4 border-indigo-500 overflow-hidden hover:shadow-2xl transition-all duration-300 group flex flex-col h-full">
+                    <div class="bg-indigo-500 px-6 py-4 flex justify-between items-center">
+                        <span class="font-bold text-white"><i class="far fa-calendar-alt mr-2"></i> Next Saturday</span>
+                        <span class="bg-white/20 px-3 py-1 rounded text-xs font-bold text-white uppercase">GCSE Maths</span>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <h3 class="font-heading font-bold text-2xl text-gray-800 mb-3 group-hover:text-indigo-600 transition">Algebra Rescue</h3>
+                        <p class="text-gray-500 text-base mb-6">Solving quadratics and rearranging formulae made simple.</p>
+                        <div class="flex items-center justify-between mt-auto pt-6 border-t border-gray-100">
+                            <span class="text-2xl font-bold text-indigo-600">£5 <span class="text-sm text-gray-400 font-normal">/ session</span></span>
+                            <button onclick="openModal()" class="text-gray-900 font-bold text-sm hover:underline hover:text-indigo-600 transition">Book Spot &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="bg-white rounded-2xl shadow-lg border-b-4 border-pink-400 overflow-hidden hover:shadow-2xl transition-all duration-300 group opacity-80 flex flex-col h-full">
+                    <div class="bg-pink-400 px-6 py-4 flex justify-between items-center">
+                        <span class="font-bold text-white"><i class="far fa-clock mr-2"></i> Coming Soon</span>
+                        <span class="bg-white/20 px-3 py-1 rounded text-xs font-bold text-white uppercase">KS3 English</span>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <h3 class="font-heading font-bold text-2xl text-gray-800 mb-3">Creative Writing Lab</h3>
+                        <p class="text-gray-500 text-base mb-6">How to use metaphors and similes to boost your grades.</p>
+                        <div class="flex items-center justify-between mt-auto pt-6 border-t border-gray-100">
+                            <span class="text-xl font-bold text-gray-400">Join Waitlist</span>
+                            <button onclick="alert('Waitlist joined!')" class="text-gray-500 font-bold text-sm hover:underline">Notify Me &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16">
+                <p class="text-gray-500 text-sm mb-4">Want a specific topic covered?</p>
+                <button onclick="openModal()" class="inline-flex items-center justify-center px-8 py-3 border-2 border-yellow-500 text-yellow-800 font-bold rounded-full hover:bg-yellow-100 transition shadow-sm hover:shadow-md">
+                    Request a Cram Topic
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stuck on a Question? Section -->
+    <!-- Constrained to max-w-4xl to prevent stretching on large screens -->
+    <section class="py-20 px-4 border-t border-gray-100 bg-white">
+        <div class="max-w-4xl mx-auto bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[2.5rem] p-10 md:p-16 shadow-2xl text-center relative overflow-hidden transform transition hover:scale-[1.01] duration-500">
+            <div class="absolute top-0 left-0 w-full h-full bg-white opacity-5" style="background-image: radial-gradient(#ffffff 2px, transparent 2px); background-size: 30px 30px;"></div>
+            
+            <!-- Floating Elements Decoration -->
+            <div class="absolute top-10 left-10 text-white opacity-20 text-4xl hidden md:block">?</div>
+            <div class="absolute bottom-10 right-10 text-white opacity-20 text-4xl hidden md:block">?</div>
+
+            <div class="relative z-10">
+                <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-white mb-6">Stuck on a tricky homework question?</h2>
+                <p class="text-indigo-100 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Don't struggle in silence! Send me a photo of the question you're stuck on. I'll record a <strong class="text-white">free 2-minute video</strong> explaining exactly how to solve it.
+                </p>
+                <button onclick="alert('Upload Question!')" class="bg-yellow-400 text-yellow-900 font-bold py-4 px-10 rounded-full shadow-xl hover:bg-yellow-300 transition transform hover:scale-105 text-lg flex items-center justify-center mx-auto">
+                    <i class="fas fa-camera mr-3"></i> Send My Question
+                </button>
+                <p class="text-indigo-200 text-sm mt-6">Limited to one free question per new student.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-50 pt-20 pb-10 border-t border-gray-200 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mb-16">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-8 h-8 bg-gradient-to-tr from-pink-300 to-yellow-300 rounded-lg"></div>
+                        <span class="font-heading font-extrabold text-2xl text-gray-900">Bloom Tuition</span>
+                    </div>
+                    <p class="text-gray-600 max-w-sm mb-8 text-lg leading-relaxed">Professional online tutoring that puts student wellbeing first. We help build confidence, one lesson at a time.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-indigo-600 text-2xl transition transform hover:-translate-y-1"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-indigo-600 text-2xl transition transform hover:-translate-y-1"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-indigo-600 text-2xl transition transform hover:-translate-y-1"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-xl mb-6 text-gray-900">Get in touch</h3>
+                    <div class="space-y-4">
+                        <a href="mailto:bloomtuition@outlook.com" class="flex items-center text-gray-600 hover:text-indigo-600 transition group">
+                            <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center mr-4 group-hover:bg-indigo-100 transition"><i class="fas fa-envelope text-indigo-500"></i></div>
+                            bloomtuition@outlook.com
+                        </a>
+                        <a href="tel:02080582232" class="flex items-center text-gray-600 hover:text-indigo-600 transition group">
+                            <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center mr-4 group-hover:bg-indigo-100 transition"><i class="fas fa-phone text-indigo-500"></i></div>
+                            0208 058 2232
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center text-gray-400 text-sm pt-8 border-t border-gray-200">&copy; 2025 Bloom Tuition. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm" aria-hidden="true" onclick="closeModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-8">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-2xl leading-6 font-bold text-gray-900 mb-2" id="modal-title">Book a Free Trial</h3>
+                            <p class="text-sm text-gray-500 mb-8">Fill in your details below and we'll contact you to arrange a 20-minute online assessment.</p>
+                            <form onsubmit="event.preventDefault(); alert('Lead Submitted!'); closeModal();" class="space-y-5">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">Parent Name</label>
+                                    <input type="text" class="w-full rounded-lg border-gray-300 shadow-sm border p-3 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="John Smith">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
+                                    <input type="email" class="w-full rounded-lg border-gray-300 shadow-sm border p-3 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="john@example.com">
+                                </div>
+                                <div class="pt-2">
+                                    <button type="submit" class="w-full rounded-xl border border-transparent shadow-lg px-4 py-4 bg-indigo-600 text-white font-bold text-lg hover:bg-indigo-700 transition transform hover:-translate-y-0.5">Request Callback</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-4 sm:px-6 flex justify-center">
+                    <button type="button" class="text-gray-500 font-medium hover:text-gray-800 text-sm" onclick="closeModal()">No thanks, cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </section>
 
-  <!-- Contact -->
-  <section id="contact" aria-labelledby="contact-title">
-    <div class="wrap contact">
-      <div>
-        <h2 id="contact-title" class="section-title hand">Contact us</h2>
-        <p>Send us a message and we’ll get back to you. Prefer quick chat? Call <a href="tel:02080582232">0208 058 2232</a>.</p>
-        <form onsubmit="return handleSubmit(event)">
-          <label for="name">Your name</label>
-          <input id="name" name="name" autocomplete="name" required>
-
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" autocomplete="email" required>
-
-          <label for="phone">Phone (optional)</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel">
-
-          <label for="message">How can we help?</label>
-          <textarea id="message" name="message" required></textarea>
-
-          <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1rem">
-            <a class="btn btn-primary" href="mailto:bloomtuition@outlook.com?subject=Enquiry%20from%20Bloom%20Tuition%20Website" target="_blank">Send message</a>
-            <a class="btn btn-soft" href="mailto:bloomtuition@outlook.com?subject=Enquiry%20from%20Bloom%20Website">Email us instead</a>
-          </div>
-          <p id="formNote" class="sr-only" aria-live="polite"></p>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap">
-      <div>© <span id="year"></span> Bloom Tuition. All rights reserved.</div>
-      <div><a href="#home">Back to top ↑</a></div>
-    </div>
-  </footer>
-
-  <script>
-    // Mobile menu toggle
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileNav = document.getElementById('mobileNav');
-    if(menuBtn){
-      menuBtn.addEventListener('click',()=>{
-        const show = !mobileNav.classList.contains('show');
-        mobileNav.classList.toggle('show', show);
-        menuBtn.setAttribute('aria-expanded', String(show));
-      });
-    }
-
-    // Faux form handler so the page works in static preview
-    function handleSubmit(e){
-      e.preventDefault();
-      const form = e.target;
-      const note = document.getElementById('formNote');
-      note.classList.remove('sr-only');
-      note.textContent = 'Thanks! Your message has been captured for this preview. In production, connect this form to email or a backend.';
-      form.reset();
-      return false;
-    }
-
-    // Year in footer
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+    <script>
+        function toggleMenu() { const menu = document.getElementById('mobile-menu'); menu.classList.toggle('hidden'); }
+        function openModal() { document.getElementById('bookingModal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('bookingModal').classList.add('hidden'); }
+        document.addEventListener('keydown', function(event) { if (event.key === "Escape") { closeModal(); } });
+    </script>
 </body>
 </html>
